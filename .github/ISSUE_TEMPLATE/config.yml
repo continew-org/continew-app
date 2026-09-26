@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "\U0001F510 安全漏洞"
+    url: "https://github.com/continew-org/continew-app/security/advisories/new"
+    about: 通过 GitHub 安全通告来报告安全漏洞，以确保负责任的披露。💡 请勿在公开 Issue 中报告安全漏洞！
+  - name: "\U0001F4DD ContiNew 官方文档"
+    url: https://continew.top
+    about: 提供项目使用指南、教程和常见问题解答
+  - name: "\U0001F4AC ContiNew 官方交流群"
+    url: https://continew.top/discussion.html
+    about: 扫码加入官方微信交流群，获取第一手项目动态，结识志同道合的技术爱好者

@@ -1,0 +1,41 @@
+{
+  "name": "continew-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ContiNew App - 面向 Vibe Coding 的多端工程脚手架",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "pnpm@12.6.0",
+  "scripts": {
+    "dev:demo": "pnpm --filter @continew-app/demo dev:h5",
+    "dev:h5": "pnpm --filter @continew-app/demo dev:h5",
+    "dev:mp-weixin": "pnpm --filter @continew-app/demo dev:mp-weixin",
+    "dev:app": "pnpm --filter @continew-app/demo dev:app",
+    "dev:server": "pnpm --filter @continew-app/server dev",
+    "build": "pnpm build:server && pnpm build:h5 && pnpm build:mp-weixin",
+    "build:server": "pnpm --filter @continew-app/server build",
+    "build:h5": "pnpm --filter @continew-app/demo build:h5",
+    "build:mp-weixin": "pnpm --filter @continew-app/demo build:mp-weixin",
+    "build:app": "pnpm --filter @continew-app/demo build:app",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:redline": "node tools/review-lint.mjs",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "verify": "pnpm lint && pnpm lint:redline && pnpm typecheck && pnpm build",
+    "verify:quick": "pnpm lint && pnpm lint:redline && pnpm typecheck",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@continew-app/eslint-config": "workspace:*",
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "eslint": "catalog:",
+    "husky": "catalog:",
+    "lint-staged": "catalog:",
+    "typescript": "catalog:"
+  }
+}

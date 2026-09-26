@@ -1,0 +1,20 @@
+{
+  "name": "@continew-app/eslint-config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ContiNew App 统一 ESLint 配置（基于 @antfu/eslint-config 二次定制）",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "files": [
+    "index.mjs"
+  ],
+  "dependencies": {
+    "@antfu/eslint-config": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "catalog:"
+  }
+}

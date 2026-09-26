@@ -1,0 +1,27 @@
+{
+  "name": "@continew-app/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ContiNew App 核心运行时：HTTP 封装 / 会话管理 / 组合式函数",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

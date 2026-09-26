@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["@dcloudio/types"],
+    "lib": ["ES2020", "DOM"],
+    "jsx": "preserve",
+    // @wot-ui/ui 以 TS 源码发布；noUncheckedIndexedAccess 会把库内大量合法索引打成错误
+    "noUncheckedIndexedAccess": false
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,2 @@
+pnpm lint-staged
+node tools/review-lint.mjs --diff

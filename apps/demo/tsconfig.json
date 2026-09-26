@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["@dcloudio/types", "miniprogram-api-typings", "@uni-helper/uni-types"],
+    "lib": ["ES2020", "DOM"],
+    "jsx": "preserve",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    // @wot-ui/ui 以 TS 源码发布；noUncheckedIndexedAccess 会把库内大量合法索引打成错误
+    "noUncheckedIndexedAccess": false
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "uno.config.ts", "vite.config.ts", "unh.config.ts"]
+}

@@ -1,0 +1,42 @@
+name: ❓ 使用咨询
+description: 咨询 ContiNew App 的使用或设计相关问题
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提问前建议先查阅官方文档，多数使用问题都能快速找到答案。
+
+        > 依赖组件自身的问题（如 wot-design-uni、uni-app、Vite 等）请提交至对应组件仓库。
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我确认这是使用咨询而非 Bug 报告（Bug 请使用 Bug 报告模板）
+          required: true
+        - label: 我确认已搜索已有 Issue，没有类似问题
+          required: true
+        - label: 我确认这是 ContiNew App 自身的问题，而非依赖组件的问题
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: ContiNew App 版本
+      placeholder: 例如：0.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 详细描述你的问题，请提供尽可能多的上下文信息（涉及的端、使用场景等）。
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: 已尝试的方法
+      description: 描述你已经尝试过的排查或解决方案。
+    validations:
+      required: false

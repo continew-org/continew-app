@@ -1,0 +1,96 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# catalog：依赖版本唯一事实源（对齐 Java BOM 纪律），各 package.json 一律写 "catalog:"。
+# 要求 pnpm ≥ 12（packageManager 字段已锁定，corepack enable 启用）。
+catalog:
+  "typescript": "~5.9.2"
+  "vue": "~3.5.13"
+  "vue-i18n": "^11.1.2"
+  "pinia": "^3.0.3"
+  "@vue/devtools-api": "^7.7.7"
+  "@vue/devtools-kit": "^7.7.7"
+  "@vue/devtools-shared": "^7.7.7"
+  "pinia-plugin-persistedstate": "^4.2.0"
+  "@dcloudio/uni-app": "3.0.0-5020620260917001"
+  "@dcloudio/uni-app-harmony": "3.0.0-5020620260917001"
+  "@dcloudio/uni-app-plus": "3.0.0-5020620260917001"
+  "@dcloudio/uni-components": "3.0.0-5020620260917001"
+  "@dcloudio/uni-h5": "3.0.0-5020620260917001"
+  "@dcloudio/uni-mp-alipay": "3.0.0-5020620260917001"
+  "@dcloudio/uni-mp-baidu": "3.0.0-5020620260917001"
+  "@dcloudio/uni-mp-jd": "3.0.0-5020620260917001"
+  "@dcloudio/uni-mp-kuaishou": "3.0.0-5020620260917001"
+  "@dcloudio/uni-mp-lark": "3.0.0-5020620260917001"
+  "@dcloudio/uni-mp-qq": "3.0.0-5020620260917001"
+  "@dcloudio/uni-mp-toutiao": "3.0.0-5020620260917001"
+  "@dcloudio/uni-mp-weixin": "3.0.0-5020620260917001"
+  "@dcloudio/uni-mp-xhs": "3.0.0-5020620260917001"
+  "@dcloudio/uni-quickapp-webview": "3.0.0-5020620260917001"
+  "@dcloudio/types": "^3.4.14"
+  "@dcloudio/uni-automator": "3.0.0-5020620260917001"
+  "@dcloudio/uni-cli-shared": "3.0.0-5020620260917001"
+  "@dcloudio/uni-stacktracey": "3.0.0-5020620260917001"
+  "@dcloudio/vite-plugin-uni": "3.0.0-5020620260917001"
+  "@uni-helper/plugin-uni": "^0.1.0"
+  "@uni-helper/unh": "^0.3.3"
+  "@uni-helper/uni-types": "^1.0.0-alpha.9"
+  "@uni-helper/unocss-preset-uni": "^0.5.1"
+  "@uni-helper/vite-plugin-uni-components": "^0.3.2"
+  "@uni-helper/vite-plugin-uni-manifest": "^0.6.0"
+  "@wot-ui/ui": "^2.3.2"
+  "@wot-ui/unocss-preset": "^1.0.0"
+  # unocss 必须 ≥66.10.1：@uni-helper/unocss-preset-uni 顶层静态 import presetWind4，
+  # 该导出 66.10.x 才加入 unocss 主包（66.0.0 没有，会导致构建期 ESM 解析失败）。
+  "unocss": "^66.10.5"
+  "unocss-applet": "^0.15.1"
+  "@unocss/preset-rem-to-px": "^66.10.5"
+  "vite": "5.2.8"
+  "vue-tsc": "^2.2.12"
+  # vite 锁死 5.2.8（@dcloudio/vite-plugin-uni peer 限制），其 CSS 预处理器只认 dart-sass 的 `sass`，
+  # 不认 5.4+ 才支持的 sass-embedded / modern-compiler api——故此处用 `sass`。
+  # 注：本仓当前零 scss 用法（SFC 禁 style 块），sass 是给使用者在 src/styles/*.css 之外写 scss 预留的。
+  "sass": "^1.93.3"
+  "miniprogram-api-typings": "^5.1.2"
+  "eslint": "^10.11.0"
+  "@antfu/eslint-config": "^6.6.1"
+  "@commitlint/cli": "^20.1.0"
+  "@commitlint/config-conventional": "^20.0.0"
+  "husky": "^9.1.7"
+  "lint-staged": "^16.2.3"
+  "vitest": "^3.2.4"
+  "hono": "^4.10.2"
+  "@hono/node-server": "^1.19.5"
+  "@hono/zod-validator": "^0.7.4"
+  "zod": "^3.25.76"
+  "tsx": "^4.20.6"
+  "@types/node": "^22.18.0"
+
+overrides:
+  # antfu 6.x 依赖的 yml 1.x 与 ESLint 10 不兼容，强制升到 3.x。
+  # 验证可否移除：删 node_modules 与 lockfile，pnpm 12 重装后跑 pnpm lint。
+  "eslint-plugin-yml": "^3.8.1"
+  # @wot-ui/unocss-preset 把 @unocss/core 钉死 66.0.0，与项目 66.10.5 类型分裂致 vue-tsc 报错，强制对齐。
+  # 注意：overrides 仅 pnpm ≥12 从本文件读取（packageManager 已锁 12.6.0）；用 pnpm 9 会静默失效。
+  "@unocss/core": "66.10.5"
+
+# 允许执行构建脚本的依赖（pnpm 12 默认拒绝）。
+allowBuilds:
+  esbuild: true
+  core-js: true
+  core-js-pure: true
+  "@parcel/watcher": true
+
+# 供应链发版年龄豁免（非手写配置）：pnpm 12 默认拒绝安装「发版距今不足 minimumReleaseAge」的包，
+# 以防刚发布即被投毒。本清单是 pnpm 12 在用官方 registry 全新解析依赖时自动写入的——
+# 这些包是 eslint/markdown 工具链传递依赖，发版较新但来源可信，被策略拦截后由 pnpm 自动豁免并记录于此。
+# 请勿手改；下次 install 时 pnpm 会按需自动增删。
+minimumReleaseAgeExclude:
+  - ansi-regex@6.4.0
+  - copy-anything@4.1.4
+  - micromark-core-commonmark@2.0.4
+  - micromark-factory-space@2.1.0
+  - micromark-util-edit-map@1.0.0
+  - micromark-util-types@2.0.3
+  - micromark@4.0.3

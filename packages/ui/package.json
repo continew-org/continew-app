@@ -1,0 +1,27 @@
+{
+  "name": "@continew-app/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ContiNew App Cm* 薄壳组件（基于 wot-design-uni）",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@wot-ui/ui": "catalog:",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "catalog:",
+    "@uni-helper/uni-types": "catalog:",
+    "typescript": "catalog:",
+    "vue-tsc": "catalog:"
+  }
+}
