@@ -1,10 +1,20 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+
 defineOptions({ name: 'DemoTabBar' })
 
 const props = withDefaults(defineProps<{
   /** 当前激活项 key */
   current: string
 }>(), {})
+
+// tabBar.custom 仅微信小程序生效：H5 / App 端原生 tabbar 仍会渲染（白底、无图标、
+// 颜色取 pages.json 静态值），会压在 wd-tabbar 上——主动隐藏，让自定义栏接管。
+onMounted(() => {
+  // #ifdef H5 || APP-PLUS
+  uni.hideTabBar({ fail: () => {} })
+  // #endif
+})
 
 interface TabItem {
   key: string

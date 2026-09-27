@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watchEffect } from 'vue'
 import { useTheme } from '@/composables/use-theme'
 
 /**
@@ -15,6 +15,19 @@ import { useTheme } from '@/composables/use-theme'
 const { theme, themeVars, listenSystemTheme } = useTheme()
 
 onMounted(listenSystemTheme)
+
+// 导航栏 / 原生页面底色跟随应用内主题：pages.json 的 darkmode+theme.json 只跟随系统，
+// 用户在应用内手动切到暗色（系统仍是亮色）时原生层不会跟——这里是唯一能三端同步的地方。
+// 色值与 tokens.css 的亮暗两态保持一致（uni API 只收字符串，无法引用 CSS 变量）。
+watchEffect(() => {
+  const dark = theme.value === 'dark'
+  uni.setNavigationBarColor({
+    frontColor: dark ? '#ffffff' : '#000000',
+    backgroundColor: dark ? '#1d1f29' : '#ffffff',
+    fail: () => {},
+  })
+  uni.setBackgroundColor({ backgroundColor: dark ? '#1d1f29' : '#f7f8fa' })
+})
 </script>
 
 <template>

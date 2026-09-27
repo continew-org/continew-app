@@ -47,9 +47,9 @@ function onAbout() {
 
       <view class="mt-4 overflow-hidden rounded-card bg-card shadow-card">
         <wd-cell-group border>
-          <wd-cell v-if="!user" title="去登录" label="账号密码 + 微信一键（会话链路演示）" icon="lock-on" is-link @click="onLogin" />
-          <wd-cell title="设置" label="会话信息与退出登录" icon="setting" is-link @click="goSettings" />
-          <wd-cell title="关于" label="OpenContiNew 社区" icon="info-circle" is-link @click="onAbout" />
+          <wd-cell v-if="!user" title="去登录" label="账号密码 + 微信一键（会话链路演示）" prefix-icon="lock" is-link @click="onLogin" />
+          <wd-cell title="设置" label="会话信息与退出登录" prefix-icon="settings" is-link @click="goSettings" />
+          <wd-cell title="关于" label="OpenContiNew 社区" prefix-icon="info-circle" is-link @click="onAbout" />
         </wd-cell-group>
       </view>
     </view>

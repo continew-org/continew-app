@@ -61,7 +61,7 @@ async function onDelete(item: DemoItem) {
         >
           <wd-cell
             :title="item.title"
-            label="点击查看详情，左滑编辑 / 删除"
+            label="左滑编辑 / 删除"
             is-link
             @click="goDetail(item)"
           />

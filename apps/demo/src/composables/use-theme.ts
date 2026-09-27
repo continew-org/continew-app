@@ -52,7 +52,14 @@ const theme = computed<ResolvedTheme>(() => (isDark.value ? 'dark' : 'light'))
  * 组件库与业务页面永远同步，不存在「按钮变暗了、卡片还是亮的」。
  */
 const themeVars = computed<Record<string, string>>(() => {
-  const vars: Record<string, string> = {}
+  // 组件密度基线（亮暗共用）：wd-cell 默认 24px 横向内边距且标题/摘要同字号，
+  // 375 宽度下 label 频繁换行、层级发糊；tabbar 50px 放图标+文字会贴边。
+  const vars: Record<string, string> = {
+    cellPadding: '12px 16px',
+    cellTitleFontSize: '15px',
+    cellLabelFontSize: '12px',
+    tabbarHeight: '56px',
+  }
   for (let i = 1; i <= BRAND_STEPS; i++)
     vars[`primary${i}`] = `var(--cm-brand-${isDark.value ? BRAND_STEPS + 1 - i : i})`
   if (isDark.value) {

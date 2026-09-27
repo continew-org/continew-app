@@ -40,7 +40,7 @@ function onLogout() {
       <view class="mt-4 overflow-hidden rounded-card bg-card shadow-card">
         <wd-cell-group border>
           <wd-cell title="当前账号" :value="user?.nickname ?? '未登录'" />
-          <wd-cell title="关于" label="OpenContiNew 社区" icon="info-circle" is-link @click="feedback.show('OpenContiNew 社区（演示）')" />
+          <wd-cell title="关于" label="OpenContiNew 社区" prefix-icon="info-circle" is-link @click="feedback.show('OpenContiNew 社区（演示）')" />
         </wd-cell-group>
       </view>
 

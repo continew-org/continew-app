@@ -53,9 +53,9 @@ function goLogin() {
       </text>
       <view class="overflow-hidden rounded-card bg-card shadow-card">
         <wd-cell-group border>
-          <wd-cell title="统一请求层" label="createRequestor：token 注入 + 业务错误归一化 + 401 恢复" icon="link" />
-          <wd-cell title="会话管理" label="单飞刷新令牌 + safeBack 兜底返回" icon="lock-on" />
-          <wd-cell title="列表三态" label="useList + CmPage：加载 / 错误 / 空态" icon="list" />
+          <wd-cell title="统一请求层" label="token 注入 · 401 恢复" prefix-icon="link" />
+          <wd-cell title="会话管理" label="单飞刷新 · 兜底返回" prefix-icon="lock" />
+          <wd-cell title="列表三态" label="useList + CmPage" prefix-icon="list" />
         </wd-cell-group>
       </view>
 
@@ -64,9 +64,9 @@ function goLogin() {
       </text>
       <view class="overflow-hidden rounded-card bg-card shadow-card">
         <wd-cell-group border>
-          <wd-cell title="Tailwind 语法" label="px-4 / text-sm / flex（AI 语料最丰富）" icon="magic" />
-          <wd-cell title="wot-* 令牌" label="品牌语义色与间距（对齐 wot-design-uni）" icon="palette" />
-          <wd-cell title="Cm* 薄壳" label="CmPage / CmEmpty（基于 wot-design-uni）" icon="view-module" />
+          <wd-cell title="Tailwind 语法" label="AI 语料最丰富的原子类" prefix-icon="code" />
+          <wd-cell title="wot-* 令牌" label="与组件库变量同源" prefix-icon="bg-colors" />
+          <wd-cell title="Cm* 薄壳" label="CmPage / CmEmpty 等" prefix-icon="module-fill" />
         </wd-cell-group>
       </view>
 
@@ -75,9 +75,9 @@ function goLogin() {
       </text>
       <view class="overflow-hidden rounded-card bg-card shadow-card">
         <wd-cell-group border>
-          <wd-cell title="统一删除确认" label="confirmDelete：全应用一致的删除交互" icon="delete" is-link @click="onDemoConfirm" />
-          <wd-cell title="登录页" label="账号密码 + 微信一键（会话链路演示）" icon="lock-on" is-link @click="goLogin" />
-          <wd-cell title="不裸调 uni API" label="请求 / 返回 / 弹窗走 core 封装（红线机器拦截）" icon="warning" />
+          <wd-cell title="统一删除确认" label="confirmDelete 全应用一致" prefix-icon="delete" is-link @click="onDemoConfirm" />
+          <wd-cell title="登录页" label="账号密码 + 微信一键" prefix-icon="lock" is-link @click="goLogin" />
+          <wd-cell title="不裸调 uni API" label="一律走 core 封装" prefix-icon="exclamation-circle" />
         </wd-cell-group>
       </view>
 
