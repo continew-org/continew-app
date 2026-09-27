@@ -33,7 +33,7 @@ const emit = defineEmits<{
 
     <!-- 错误态 -->
     <view v-else-if="error" class="flex flex-col items-center justify-center py-24">
-      <text class="text-sm text-color-secondary">
+      <text class="text-sm text-secondary">
         {{ error }}
       </text>
       <wd-button class="mt-6" size="small" plain @click="emit('retry')">

@@ -3,6 +3,7 @@ import Uni from '@uni-helper/plugin-uni'
 import Components from '@uni-helper/vite-plugin-uni-components'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vite'
+import { CmResolver } from './src/resolvers/cm-ui-resolver'
 import { WotResolver } from './src/resolvers/wot-ui-resolver'
 
 export default defineConfig({
@@ -22,7 +23,7 @@ export default defineConfig({
   plugins: [
     // 须在 Uni() 之前
     Components({
-      resolvers: [WotResolver()],
+      resolvers: [WotResolver(), CmResolver()],
       dts: 'src/components.d.ts',
       dirs: ['src/components'],
     }),
