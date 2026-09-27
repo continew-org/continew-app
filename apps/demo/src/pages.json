@@ -29,18 +29,37 @@
       "style": {
         "navigationBarTitleText": "详情"
       }
+    },
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/form/index",
+      "style": {
+        "navigationBarTitleText": "表单"
+      }
+    },
+    {
+      "path": "pages/settings/index",
+      "style": {
+        "navigationBarTitleText": "设置"
+      }
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "ContiNew App",
     "navigationBarBackgroundColor": "#ffffff",
-    "backgroundColor": "#f7f8fa"
+    "backgroundColor": "#f7f8fa",
+    "darkmode": true
   },
   "tabBar": {
     "custom": true,
     "color": "#868a9c",
-    "selectedColor": "#1C64FD",
+    "selectedColor": "#165DFF",
     "backgroundColor": "#ffffff",
     "list": [
       {

@@ -40,7 +40,8 @@
     "vue-i18n": "catalog:",
     "@vue/devtools-api": "catalog:",
     "@vue/devtools-kit": "catalog:",
-    "@vue/devtools-shared": "catalog:"
+    "@vue/devtools-shared": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@dcloudio/types": "catalog:",
