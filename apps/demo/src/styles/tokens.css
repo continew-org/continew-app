@@ -1,0 +1,140 @@
+/* ==========================================================================
+ * Design Token —— 唯一值来源（Values）
+ * ==========================================================================
+ * 本文件只放「值」，类名放 uno.config.ts（Values → Names 分离）。
+ * 三层结构：
+ *   1. 原始层（Primitive）：--cm-brand-1..10，纯数值，无语义，就是一张色卡 + 一把尺子
+ *   2. 语义层（Semantic）：--cm-primary / --cm-bg-card / --cm-elevation-*，有角色含义，
+ *      指向原始层
+ *   3. 主题（Theme）：下面的 .wot-theme-dark 块，只改「语义层 → 原始层」的映射
+ *
+ * 为什么必须有这三层：只要业务代码只引用语义层，新增一个主题的成本就是「加一张映射表」；
+ * 一旦有人在组件里写死 #fff，加主题就变成全量替换——moment-trace 换不了主题最后只能废弃，
+ * 根源就在这里。所以页面里禁止出现 bg-white，一律 bg-card。
+ *
+ * 为什么中性色不自建色阶：wot-design-uni 的 config-provider 自带 light/dark 两套语义变量
+ * （--wot-filled-* / --wot-text-* / --wot-border-* / --wot-divider-*），且 wd-config-provider
+ * 挂上 .wot-theme-dark 后自动整组翻转。重复造一套中性色阶等于多一份漂移面，故 --cm-bg-* 直接
+ * 指向 wot 语义变量，白拿它的暗色适配。
+ * ========================================================================== */
+
+:root,
+page {
+  /* ── 1. 原始层：ContiNew 品牌蓝（对齐 Arco Design blue 色板，与 PC 端 continew-admin-ui 一脉相承）──
+   * 选蓝不选绿的原因：glow-trace 的薄荷绿是产品品牌色，而 continew-app 是工程脚手架，
+   * 视觉上需要延续 ContiNew 社区已有的蓝色资产，避免「同一个社区两套主色」。
+   * 1 最浅 → 10 最深，6 为默认主色（与 wot / Arco 的 primary-6 约定一致）。
+   */
+  --cm-brand-1: #e8f3ff;
+  --cm-brand-2: #bedaff;
+  --cm-brand-3: #94bfff;
+  --cm-brand-4: #6aa1ff;
+  --cm-brand-5: #4080ff;
+  --cm-brand-6: #165dff;
+  --cm-brand-7: #0e42d2;
+  --cm-brand-8: #072ca6;
+  --cm-brand-9: #031a79;
+  --cm-brand-10: #000d4d;
+
+  /* ── 2. 语义层：主色 ──
+   * --cm-primary 是「此刻的主色」，暗色下会整体提亮一档（见下方 dark 块），
+   * 业务与 config-provider 的 themeVars 都只引用它，不直接引用 --cm-brand-N。
+   */
+  --cm-primary: var(--cm-brand-6);
+  --cm-primary-hover: var(--cm-brand-7);
+  --cm-primary-active: var(--cm-brand-8);
+  --cm-primary-soft: rgba(22, 93, 255, 0.1);
+  --cm-primary-soft-strong: rgba(22, 93, 255, 0.16);
+  --cm-primary-shadow: rgba(22, 93, 255, 0.28);
+  --cm-on-primary: #ffffff;
+
+  /* ── 语义层：中性（指向 wot，白拿它的暗色翻转）── */
+  --cm-bg-page: var(--wot-filled-bottom);
+  --cm-bg-card: var(--wot-filled-oppo);
+  --cm-bg-sunken: var(--wot-filled-content);
+  --cm-border: var(--wot-border-light);
+  --cm-border-strong: var(--wot-border-main);
+  --cm-divider: var(--wot-divider-main);
+
+  /* ── 语义层：海拔（wot 没有，必须自建）──
+   * 亮色用低透明度的冷灰投影，模拟「纸片浮起」。
+   */
+  --cm-elevation-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+  --cm-elevation-2: 0 2px 6px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --cm-elevation-3: 0 8px 20px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06);
+  --cm-elevation-brand: 0 4px 14px var(--cm-primary-shadow);
+
+  /* ── 语义层：圆角 ──
+   * 移动端卡片 12–20px。PC 端 continew-admin-ui 的 2px 小圆角不可平移到移动端：
+   * 手指点击目标大，2px 圆角在大色块上会显得生硬。
+   */
+  --cm-radius-sm: 8px;
+  --cm-radius-md: 12px;
+  --cm-radius-lg: 16px;
+  --cm-radius-xl: 20px;
+  --cm-radius-pill: 999px;
+
+  /* ── 语义层：动效 ──
+   * 移动端动效宁短勿长：超过 300ms 的过渡会被感知为「卡」。
+   * ease-out 收尾，不做回弹（回弹是 glow-trace ADR 明确摒弃的）。
+   */
+  --cm-duration-fast: 120ms;
+  --cm-duration-base: 200ms;
+  --cm-duration-slow: 320ms;
+  --cm-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --cm-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── 3. 暗色主题：只改映射，不动原始层 ──
+ * 选择器必须是 .wot-theme-dark（wd-config-provider 挂的 class），
+ * 这样暗色作用域与组件库完全一致，不会出现「组件变暗了、业务页面还是亮的」。
+ *
+ * 主色为什么暗色要提亮：#165dff 在近黑底上明度不足，可点击感变弱；
+ * 提一档到 brand-5(#4080ff) 是暗色主题的通行做法（Arco / Material 同理）。
+ *
+ * 阴影为什么换成纯黑高透明：暗底上浅色投影几乎不可见，靠「更黑的虚影 + 更亮的卡片面」
+ * 制造层次，而不是靠投影本身。
+ */
+.wot-theme-dark {
+  --cm-primary: var(--cm-brand-5);
+  --cm-primary-hover: var(--cm-brand-4);
+  --cm-primary-active: var(--cm-brand-6);
+  --cm-primary-soft: rgba(64, 128, 255, 0.16);
+  --cm-primary-soft-strong: rgba(64, 128, 255, 0.24);
+  --cm-primary-shadow: rgba(64, 128, 255, 0.36);
+  --cm-on-primary: #0b1220;
+
+  /* ── 中性色暗色矫正（必须整组重新声明，不能白拿 wot 的）──
+   * 关键约束：CSS 自定义属性按「替换完成后的计算值」继承。指向 wot 变量的语义 token
+   * （如 --cm-bg-page: var(--wot-filled-bottom)）若只在亮色块声明，var() 会在亮色作用域
+   * 就替换冻结，本块翻转 wot 变量也救不回已冻结的引用——所以下面每一个都重新声明了一遍。
+   * review-lint 对此有机器拦截（新增语义 token 时漏声明会直接报错）。
+   *
+   * wot 暗色里：页面底 --wot-filled-bottom = coolgrey-10(#1D1F29)，
+   * 而卡片 --wot-filled-oppo = base-black(#000000)——**卡片比页面底还黑**。
+   * 亮色的层次方向是「卡片比底更浅」，暗色沿用这个变量会得到一片黑洞，层次整个反掉。
+   * 所以卡片改用 coolgrey-9(#272B3B)，比底亮一档，方向才和亮色一致。
+   *
+   * sunken（凹陷/内嵌填充）相反，必须比底更深，用叠加黑。
+   * 边框在暗底上不能再用 coolgrey 系（会和同为 coolgrey-9 的卡片糊在一起），
+   * 改用白色低透明——这是暗色 UI 的通行做法，且能自动适配任意卡片色。
+   */
+  --cm-bg-page: var(--wot-filled-bottom);
+  --cm-bg-card: var(--wot-coolgrey-9);
+  --cm-bg-sunken: rgba(0, 0, 0, 0.28);
+  --cm-border: rgba(255, 255, 255, 0.1);
+  --cm-border-strong: rgba(255, 255, 255, 0.18);
+  --cm-divider: var(--wot-divider-main);
+
+  --cm-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --cm-elevation-2: 0 4px 12px rgba(0, 0, 0, 0.48);
+  --cm-elevation-3: 0 10px 28px rgba(0, 0, 0, 0.56);
+  --cm-elevation-brand: 0 4px 16px var(--cm-primary-shadow);
+}
+
+/* page 兜底背景：uni-app 的 page 节点在 config-provider 之外，拿不到 .wot-theme-dark 的变量，
+ * 这里给亮色兜底；暗色下由页面根 view 的 bg-page 类覆盖（页面根一定在 provider 内）。
+ */
+page {
+  background-color: #f7f8fa;
+}

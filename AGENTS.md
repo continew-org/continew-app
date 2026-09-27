@@ -69,6 +69,13 @@ tools/                     # 工程化工具（review-lint 红线扫描器）
 - **统一返回体**：`packages/server` 与 `@continew-app/core` 共享 `{ error: { code, message, details? } }` 错误形状；HTTP 语义约定：`400` 入参非法（`invalid_input`）、`401` 会话失效、`404` 资源不存在、`409` 状态冲突。
 - **Cm* 薄壳组件**：`@continew-app/ui` 提供 `<CmPage>` `<CmEmpty>` 等薄壳，内部包装 `wd-*`。业务页面优先使用 Cm*，确需 wd-* 时直接使用，但**不写 `:deep()` 穿透组件内部样式**（应提 Issue 到组件库或提 PR 扩展 Cm*）。
 - **原子类**：模板优先使用 Tailwind 语法原子类（`px-4` `text-sm` `flex` 等，AI 语料最丰富）；需要品牌语义色时用 `wot-*` 令牌类；**不手写大量 scoped SCSS**。
+- **设计令牌三层结构（值 / 名 / 主题分离）**：
+  - **值**在 `apps/demo/src/styles/tokens.css`：原始层（`--cm-brand-1..10` 品牌色阶）+ 语义层（`--cm-primary` / `--cm-bg-card` / `--cm-elevation-*` 等）。中性色**不自建色阶**，直接指向 wot 语义变量（`--wot-filled-*` / `--wot-text-*` / `--wot-border-*`），白拿它的暗色翻转。
+  - **名**在 `apps/demo/uno.config.ts`：语义类短名（`bg-card` / `text-main` / `type-title` / `shadow-card`）。**新增 token 前必须先用 `createGenerator` 验证目标类能生成 CSS**（写错不报错、不告警、构建全绿，但生成零 CSS，样式静默失效）。
+  - **主题**只改「语义层 → 原始层」的映射（`.wot-theme-dark` 块）。加一个主题 = 加一张映射表，业务与配置一行都不用动。
+- **双主题（默认亮色）**：`useTheme()` 提供 light / dark / **auto 三态**（默认跟随系统，用户手动切过才固化并持久化）；主题由页面根组件 `<DemoTheme>` 挂载（`wd-config-provider` + `min-h-screen bg-page`）。
+  - **为什么不放 App.vue**：小程序端每个页面是独立 Page，App.vue 的模板不会渲染进页面，包在那里只有 H5 生效——三端里只有一端生效的 bug 最难发现。
+  - 业务代码**只引用语义类**，中性色一律用 `bg-card` / `bg-page` / `bg-sunken` / `bg-divider` / `border-line`；品牌底上的前景用 `*-on-brand`。**出现 `bg-white` 即等于宣布双主题失败**（红线 12 拦截）。
 
 ## 构建与运行命令
 
@@ -139,6 +146,7 @@ pnpm verify:quick
 | 9 | **依赖版本只改 `pnpm-workspace.yaml` 的 catalog**：package.json 一律写 `catalog:` | review-lint 扫描 |
 | 10 | **新增环境变量必须同步进 `.env.example`** | 暂无机器拦截，AI 主动遵守 |
 | 11 | **不裸调 `uni.showToast` / `showLoading` / `hideToast` / `hideLoading`**：toast 与 loading 一律走 `createGlobalFeedback()` 创建的实例（demo 中为 `apps/demo/src/api/feedback.ts`） | ESLint `no-restricted-properties`（白名单：`packages/core/src/**`） |
+| 12 | **不写硬编码中性色 / 色值**：`bg-white` / `text-white` / `border-white` / `bg-gray-100` / `bg-[#fff]` 在暗色模式下不会翻转，一律用语义类（`bg-card` / `bg-page` / `bg-sunken` / `bg-divider` / `bg-on-brand` / `text-main` / `text-secondary` / `text-on-brand` / `border-line`） | review-lint 扫描 |
 
 ## 常见任务
 
@@ -155,5 +163,10 @@ pnpm verify:quick
 - **pinia 3 devtools alias stub**：pinia 3 静态 import `@vue/devtools-api`（完整实现由浏览器 Vue DevTools 扩展运行时注入），在 uni-app 三端构建中 alias 到 `apps/demo/src/stubs/devtools.ts` 空实现。**不能改用 `build.rollupOptions.external`**（产物会残留裸 import，浏览器无 importmap 会直接报错）。
 - **小程序 PATCH 降级**：微信小程序 `uni.request` 不支持 PATCH 方法，请求层自动降级为 `POST + X-HTTP-Method-Override: PATCH`（业界通行做法），业务代码无感知。
 - **UnoCSS 语义色 shortcut（勿删）**：presetWot 配 `prefix: 'wot'` 后，令牌类名 = 规则前缀 + 完整色键（主色文本是 `text-wot-text-main`、主色背景是 `bg-wot-primary`）。这个名字无法凭直觉猜中，写错（如 `text-color-main` / `bg-primary`）**不报错、不告警、构建全绿，但生成零 CSS，样式静默失效**——lint / typecheck / build 全都发现不了。故在 `apps/demo/uno.config.ts` 的 `shortcuts` 中收敛为短名（`text-main` / `text-secondary` / `bg-primary` 等）；**新增语义色前，先用 unocss `createGenerator` 验证目标类确实能生成 CSS，再补进 shortcuts**。
+- **wot 暗色的四个坑（改主题前必读）**：
+  1. 暗色下 `--wot-filled-oppo`（卡片）是 `base-black #000000`，而页面底 `--wot-filled-bottom` 是 `coolgrey-10 #1D1F29`——**卡片比背景更黑**，亮色「卡片比底更浅」的层次方向整个反掉，会渲染出一片黑洞。`tokens.css` 已在 `.wot-theme-dark` 覆盖 `--cm-bg-card: var(--wot-coolgrey-9)`，**勿删该覆盖**。同理凹陷色改叠加黑、边框改白色低透明（否则与同为 coolgrey-9 的卡片糊在一起）。注意 `wd-card` / `wd-tabbar` / `wd-dialog` 等 12+ 组件内部直接吃 `--wot-filled-oppo`，仅改 `--cm-bg-card` 救不了它们——`use-theme.ts` 的 themeVars 已在暗色注入 `filledOppo: var(--cm-bg-card)` 整体对齐，**勿删**。
+  2. 组件库靠 `wd-config-provider` 的 `theme`（`light`/`dark`）挂 `.wot-theme-dark` class 生效，其 `index.scss` 自带两套语义变量。**主题必须包在页面根**（`DemoTheme`），不能放 App.vue——小程序端页面是独立 Page，App.vue 模板不渲染进页面。
+  3. `themeVars` 键名是 camelCase（`primary1`…`primary10`），内部 `kebabCase` 后转成 `--wot-primary-1..10`。暗色下整条色阶须**反转**映射（`primary-N ← brand-(11-N)`），与 wot 自带 dark.scss 同策略；主色同时提亮一档（暗底上 #165DFF 明度不足）。
+  4. **CSS 自定义属性按「替换完成后的计算值」继承**：指向 wot 变量的语义 token（如 `--cm-bg-page: var(--wot-filled-bottom)`）若只在亮色块声明，var() 会在亮色作用域就替换冻结，暗色翻转 wot 变量也救不回——**凡引用 `var(--wot-*)` 的 `--cm-*` 必须在 `.wot-theme-dark` 重新声明**，review-lint 已机器拦截。
 - **UnoCSS 单位策略**：统一用固定 px（`px-4` = 16px），不用 rem/rpx。`presetRemToPx` 把 wind 工具类的 rem 转成 px，避免 uni-h5 根字号缩放（`width/23.4375`）导致布局失真。三端一致，不随屏幕宽度缩放。
 - **`src/manifest.json` 是生成产物，改配置须动 `apps/demo/manifest.config.ts`**：它由 unh 的 `autoGenerate.manifest` 在 dev/build 时前置生成（已 gitignore）。**直接改 `src/manifest.json` 会在下次构建被无声覆盖，且改动不进版本库**——这是 uni-app 生态最常踩的坑（manifest.json 本是著名配置文件）。appid 走 `apps/demo/.env`（`VITE_UNI_APPID`/`VITE_WX_APPID`）。不能改用 vite 插件路线：`@uni-helper/vite-plugin-uni-manifest` 注册为 vite 插件时生成时机晚于 uni 读取 manifest.json，但**该包必须保留**（unh 通过 `isPackageExists` 检测它来启用生成）。

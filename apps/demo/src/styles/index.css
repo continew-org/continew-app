@@ -2,4 +2,8 @@
  * 品牌令牌与原子类由 UnoCSS preflight 注入（virtual:uno.css），
  * 此处仅放原子类无法覆盖的应用级覆盖（如全局动画、第三方组件兜底样式）。
  * 确需自定义样式时在本目录新增 .css 文件并在此 import，不在 SFC 里开 style 块。
+ *
+ * 引入顺序不可换：main.ts 里 virtual:uno.css 在前、本文件在后，
+ * 因此这里的令牌可以覆盖 UnoCSS preflight 注入的默认值。
  */
+@import './tokens.css';
