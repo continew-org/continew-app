@@ -35,6 +35,8 @@ export default continew(
       'regexp/no-unused-capturing-group': 'off',
       'regexp/no-misleading-capturing-group': 'off',
       'regexp/optimal-quantifier-concatenation': 'off',
+      // tools 不引入 vitest（无 package.json），测试用 Node 内置 node:test
+      'test/no-import-node-test': 'off',
     },
   },
   {

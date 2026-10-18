@@ -11,8 +11,16 @@ export const API_ERROR_CODES = [
 
 export type ApiErrorCode = (typeof API_ERROR_CODES)[number]
 
+const KNOWN_CODES: readonly string[] = API_ERROR_CODES
+
+/** 判断是否为本约定内的已知业务码；后端可能扩展新码，未知码按普通 string 处理 */
+export function isKnownApiErrorCode(code: string): code is ApiErrorCode {
+  return KNOWN_CODES.includes(code)
+}
+
 export interface ApiErrorInit {
-  code: ApiErrorCode | string
+  /** 业务错误码：约定值见 API_ERROR_CODES，后端可扩展新码，故类型放宽为 string */
+  code: string
   message: string
   status?: number
   details?: unknown

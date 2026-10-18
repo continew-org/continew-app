@@ -24,7 +24,8 @@
     "lint:fix": "eslint . --fix",
     "lint:redline": "node tools/review-lint.mjs",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test",
+    "test": "pnpm -r test && pnpm test:tools",
+    "test:tools": "node --test tools/css-blocks.test.mjs",
     "verify": "pnpm lint && pnpm lint:redline && pnpm typecheck && pnpm build",
     "verify:quick": "pnpm lint && pnpm lint:redline && pnpm typecheck",
     "prepare": "husky"

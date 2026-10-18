@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ApiError } from '../src/errors/api-error'
+import { ApiError, isKnownApiErrorCode } from '../src/errors/api-error'
 
 describe('apiError', () => {
   it('从服务端错误体构造', () => {
@@ -17,5 +17,11 @@ describe('apiError', () => {
   it('toDisplayMessage 兜底', () => {
     expect(new ApiError({ code: 'network_error', message: '' }).toDisplayMessage()).toBe('请求失败，请稍后重试')
     expect(new ApiError({ code: 'x', message: '自定义' }).toDisplayMessage()).toBe('自定义')
+  })
+
+  it('isKnownApiErrorCode 区分约定码与扩展码', () => {
+    expect(isKnownApiErrorCode('invalid_input')).toBe(true)
+    expect(isKnownApiErrorCode('internal_error')).toBe(true)
+    expect(isKnownApiErrorCode('network_error')).toBe(false)
   })
 })

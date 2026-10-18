@@ -89,7 +89,7 @@ export function continew(options = {}, ...userConfigs) {
           },
         ],
 
-        ...(options.rules ?? {}),
+        ...options.rules,
       },
     },
     ...userConfigs,

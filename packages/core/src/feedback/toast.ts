@@ -13,8 +13,8 @@ export function createGlobalFeedback(_options: GlobalFeedbackOptions = {}) {
         uni.showLoading({ title, mask: true })
         return
       }
-      const icon = type === 'success' ? 'success' : type === 'error' ? 'error' : 'none'
-      uni.showToast({ title, icon: icon as 'success' | 'error' | 'none', duration })
+      const icon = (type === 'success' || type === 'error') ? type : 'none'
+      uni.showToast({ title, icon, duration })
     },
     success(title: string) {
       toast.show(title, 'success')

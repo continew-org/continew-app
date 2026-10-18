@@ -10,7 +10,7 @@ export function CmResolver(): ComponentResolver {
   return {
     type: 'component',
     resolve: (name: string) => {
-      if (name.match(/^Cm[A-Z]/)) {
+      if (/^Cm[A-Z]/.test(name)) {
         // 目录为 kebab（cm-page/），文件为 Pascal（CmPage.vue）——两者不一致，
         // 且 Windows 上包内子路径解析不折叠大小写，文件名必须用原始 PascalCase
         const compName = kebabCase(name)

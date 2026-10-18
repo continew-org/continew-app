@@ -12,7 +12,7 @@ export type { SessionStatus, SessionUser, TokenPair } from './auth/session'
 export { useList } from './composables/use-list'
 export type { UseListOptions } from './composables/use-list'
 
-export { API_ERROR_CODES, ApiError } from './errors/api-error'
+export { API_ERROR_CODES, ApiError, isKnownApiErrorCode } from './errors/api-error'
 export type { ApiErrorCode, ApiErrorInit } from './errors/api-error'
 
 export { confirmDelete } from './feedback/confirm'

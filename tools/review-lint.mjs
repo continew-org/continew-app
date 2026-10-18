@@ -17,6 +17,7 @@
 import { execSync } from 'node:child_process'
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
+import { parseCssBlocks } from './css-blocks.mjs'
 
 const ROOT = process.cwd()
 const DIFF_MODE = process.argv.includes('--diff')
@@ -35,7 +36,7 @@ function report(level, file, line, message) {
 function getSourceFiles() {
   if (DIFF_MODE) {
     try {
-      const out = execSync('git diff --cached --name-only --diff-filter=ACM', { cwd: ROOT, encoding: 'utf8' })
+      const out = execSync('git diff --cached --name-only --diff-filter=ACM', { cwd: ROOT, encoding: 'utf8' }) // NOSONAR: 本地 pre-commit 脚本，git 跨平台无固定绝对路径，信任开发者 PATH
       return out.split('\n').filter(f => /\.(vue|ts|json)$/.test(f) && !f.includes('node_modules'))
     }
     catch {
@@ -131,10 +132,7 @@ function scanThemeTokens() {
     return // 使用者项目可能尚未引入 tokens.css，跳过
   }
 
-  const blocks = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(m => ({
-    selector: m[1].trim(),
-    body: m[2],
-  }))
+  const blocks = parseCssBlocks(css)
   const lightBody = blocks
     .filter(b => b.selector.includes(':root') || b.selector === 'page')
     .map(b => b.body)
@@ -171,7 +169,8 @@ function main() {
 
   for (const { level, file, line, message } of issues) {
     const color = level === 'error' ? RED : YELLOW
-    console.log(`${color}[${level.toUpperCase()}]${RESET} ${file}${line ? `:${line}` : ''}  ${message}`)
+    const location = line ? `${file}:${line}` : file
+    console.log(`${color}[${level.toUpperCase()}]${RESET} ${location}  ${message}`)
   }
 
   console.log(`\n[review-lint] 扫描 ${files.length} 个文件：${errors.length} 个错误，${warnings.length} 个警告`)

@@ -14,8 +14,10 @@ import { loadEnv } from 'vite'
  */
 function getMode() {
   const args = process.argv.slice(2)
-  const modeFlagIndex = args.findIndex(arg => arg === '--mode')
-  return modeFlagIndex !== -1 ? args[modeFlagIndex + 1] : args[0] === 'build' ? 'production' : 'development'
+  const modeFlagIndex = args.indexOf('--mode')
+  if (modeFlagIndex !== -1)
+    return args[modeFlagIndex + 1]
+  return args[0] === 'build' ? 'production' : 'development'
 }
 
 // .env 位于 apps/demo 根（unh 以前置进程运行，cwd 即 apps/demo）
